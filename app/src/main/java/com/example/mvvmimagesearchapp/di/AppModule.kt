@@ -28,3 +28,4 @@ class AppModule {
     fun providesUnsplashApi(retrofit: Retrofit) : UnsplashApi =
         retrofit.create(UnsplashApi::class.java)
 }
+

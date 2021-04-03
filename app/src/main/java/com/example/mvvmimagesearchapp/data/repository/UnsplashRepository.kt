@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UnasplashRepository @Inject constructor(private val unsplashApi: UnsplashApi){
+class UnsplashRepository @Inject constructor(private val unsplashApi: UnsplashApi){
 
     fun getSearchResult(query: String) =
         Pager(
