@@ -1,4 +1,4 @@
- package com.example.mvvmimagesearchapp.ui.activity
+ package com.example.mvvmimagesearchapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
