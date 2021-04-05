@@ -12,11 +12,12 @@ import com.example.mvvmimagesearchapp.data.models.UnsplashPhoto
 import com.example.mvvmimagesearchapp.databinding.ItemPhotoBinding
 
 
-class GalleryAdapter : PagingDataAdapter<UnsplashPhoto, GalleryAdapter.ItemViewHolder>(
+class GalleryAdapter(private val listener: OnItemClickListener) : PagingDataAdapter<UnsplashPhoto, GalleryAdapter.ItemViewHolder>(
     PHOTO_COMPARATOR
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder.create(parent)
+        val view = ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ItemViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
@@ -36,9 +37,23 @@ class GalleryAdapter : PagingDataAdapter<UnsplashPhoto, GalleryAdapter.ItemViewH
             ) = oldItem == newItem
         }
     }
-
-    class ItemViewHolder(private val binding: ItemPhotoBinding) :
+    interface OnItemClickListener {
+        fun onItemClick(photo: UnsplashPhoto)
+    }
+    inner class ItemViewHolder(private val binding: ItemPhotoBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener{
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = getItem(position)
+                    item?.let {
+                        listener.onItemClick(item)
+                    }
+                }
+            }
+        }
 
         fun bind(item: UnsplashPhoto) {
             binding.apply {
@@ -50,14 +65,6 @@ class GalleryAdapter : PagingDataAdapter<UnsplashPhoto, GalleryAdapter.ItemViewH
                     .into(ivPhoto)
 
                 tvPhotographerName.text = item.user.username
-            }
-        }
-
-        companion object {
-            fun create(parent: ViewGroup): ItemViewHolder {
-                val view =
-                    ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                return ItemViewHolder(view)
             }
         }
     }
