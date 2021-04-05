@@ -28,6 +28,7 @@ class UnsplashPagingSource(
                 nextKey = if (photos.isEmpty()) null else position + 1
             )
         } catch (exception: IOException) {
+            Log.e("AG", "load: $exception")
             LoadResult.Error(exception)
         } catch (exception: HttpException) {
             LoadResult.Error(exception)
