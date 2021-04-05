@@ -1,6 +1,5 @@
 package com.example.mvvmimagesearchapp.ui.gallery
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -24,7 +23,6 @@ class GalleryAdapter : PagingDataAdapter<UnsplashPhoto, GalleryAdapter.ItemViewH
         val currentPhoto = getItem(position)
         if (currentPhoto != null)
             holder.bind(currentPhoto)
-
     }
 
     companion object {
@@ -36,7 +34,6 @@ class GalleryAdapter : PagingDataAdapter<UnsplashPhoto, GalleryAdapter.ItemViewH
                 oldItem: UnsplashPhoto,
                 newItem: UnsplashPhoto
             ) = oldItem == newItem
-
         }
     }
 
@@ -62,7 +59,6 @@ class GalleryAdapter : PagingDataAdapter<UnsplashPhoto, GalleryAdapter.ItemViewH
                     ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 return ItemViewHolder(view)
             }
-
         }
     }
 

@@ -19,7 +19,6 @@ class GalleryViewModel @Inject constructor(private val repository: UnsplashRepos
     private val currentQuery = MutableLiveData(DEFAULT_QUERY)
 
     val photos = currentQuery.switchMap { query ->
-        Log.e("ASD", ": ${repository.getSearchResult("cats").value}", )
         repository.getSearchResult(query).cachedIn(viewModelScope)
     }
     fun searchPhotos(query: String) {

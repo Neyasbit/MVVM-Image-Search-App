@@ -26,10 +26,12 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
         val galleryAdapter = GalleryAdapter()
         binding.apply {
             recyclerView.setHasFixedSize(true)
-            recyclerView.adapter = galleryAdapter
+            recyclerView.adapter = galleryAdapter.withLoadStateHeaderAndFooter(
+                header = GalleryStateLoadAdapter { galleryAdapter.retry() },
+                footer = GalleryStateLoadAdapter { galleryAdapter.retry() }
+            )
         }
         viewModel.photos.observe(viewLifecycleOwner) {
-            Log.e("LOH", "onViewCreated: $it", )
             galleryAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
     }
