@@ -6,9 +6,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mvvmimagesearchapp.R
 import com.example.mvvmimagesearchapp.databinding.FragmentGalleryBinding
@@ -33,9 +35,30 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
                 header = GalleryStateLoadAdapter { galleryAdapter.retry() },
                 footer = GalleryStateLoadAdapter { galleryAdapter.retry() }
             )
+            buttonRetry.setOnClickListener {
+                galleryAdapter.retry()
+            }
         }
         viewModel.photos.observe(viewLifecycleOwner) {
             galleryAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+        }
+        galleryAdapter.addLoadStateListener { loadState ->
+            binding.apply {
+                recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                textViewError.isVisible = loadState.source.refresh is LoadState.Error
+
+                // empty view
+                if (loadState.source.refresh is LoadState.NotLoading &&
+                        loadState.append.endOfPaginationReached &&
+                        galleryAdapter.itemCount < 1) {
+                    recyclerView.isVisible = false
+                    textViewEmpty.isVisible = true
+                } else {
+                    textViewEmpty.isVisible = false
+                }
+            }
         }
         setHasOptionsMenu(true)
     }
@@ -50,7 +73,7 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-               query?.let{
+                query?.let {
                     binding.recyclerView.scrollToPosition(0)
                     viewModel.searchPhotos(query)
                     searchView.clearFocus()
